@@ -1,0 +1,22 @@
+# Env
+.env
+
+# Binary
+bin/
+
+# IDEs
+.idea/
+.vscode/
+.claude/
+.serena/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+
+# OS
+.DS_Store
+Thumbs.db

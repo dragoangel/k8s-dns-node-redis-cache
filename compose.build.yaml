@@ -1,0 +1,7 @@
+services:
+  node-cache:
+    image: ${NODE_CACHE_IMAGE_REPO:-ghcr.io/dragoangel}/${NODE_CACHE_IMAGE_NAME:-k8s-dns-node-redis-cache}:${VERSION:-unknown}
+    build:
+      context: .
+      args:
+        VERSION: ${VERSION:-unknown}
