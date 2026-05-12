@@ -2,6 +2,9 @@
 
 Node-local DNS cache with a shared Redis/Valkey-backed L2 cache.
 
+> Personal project note
+> This repository is maintained primarily for personal use. You are welcome to reuse it, but it is provided as-is, without guarantees, warranty, or support commitments.
+
 This project is a fork/adaptation of Kubernetes `node-local-dns` with:
 
 - Redis-backed shared cache plugin (`github.com/dragoangel/coredns-redis-cache-plugin` - included in `main.go`)
