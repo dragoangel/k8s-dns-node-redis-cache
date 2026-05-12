@@ -4,13 +4,13 @@ REGISTRY ?= ghcr.io/$(if $(GITHUB_OWNER),$(GITHUB_OWNER),your-github-org)
 # k8s.io/dns (node-local-dns) release version — kept in sync with the pinned dependency tag.
 # Bump via `make update-k8sdns` (auto-detects latest) or `make update-k8sdns K8SDNS_TAG=x.y.z`.
 # See: https://github.com/kubernetes/dns/tags
-VERSION     ?= $(shell cat go-node-cache-version 2>/dev/null || echo UNKNOWN)
+VERSION     ?= $(shell cat go-node-cache-version 2>/dev/null || echo unknown)
 IMAGE    := $(REGISTRY)/k8s-dns-node-redis-cache:$(VERSION)
 
 VERSION_PKG := k8s.io/dns/pkg/version
 GOFLAGS  := -ldflags="-s -w -X $(VERSION_PKG).VERSION=$(VERSION)"
 
-.PHONY: build test lint docker-build docker-build-legacy docker-push docker-push-legacy update-coredns update-k8sdns update-redis-cache update-deps clean
+.PHONY: build test lint update-coredns update-k8sdns update-redis-cache update-deps release clean docker-build docker-build-legacy docker-push docker-push-legacy
 
 build:
 	CGO_ENABLED=0 go build $(GOFLAGS) -o bin/$(BINARY) ./cmd/node-cache/
@@ -20,18 +20,6 @@ test:
 
 lint:
 	golangci-lint run ./...
-
-docker-build:
-	docker build --build-arg VERSION=$(VERSION) -t $(IMAGE) .
-
-docker-build-legacy:
-	docker build --provenance=false --sbom=false --build-arg VERSION=$(VERSION) -t $(IMAGE) .
-
-docker-push: docker-build
-	docker push $(IMAGE)
-
-docker-push-legacy: docker-build-legacy
-	docker push $(IMAGE)
 
 # update-coredns: bump github.com/coredns/coredns to a release tag.
 # Override the detected tag with `make update-coredns COREDNS_TAG=v1.14.3`.
@@ -73,5 +61,42 @@ update-redis-cache:
 # Override individual tags with COREDNS_TAG / K8SDNS_TAG / REDIS_CACHE_TAG.
 update-deps: update-coredns update-k8sdns update-redis-cache
 
+# release: create and validate a git release tag locally.
+# Usage: make release TAG=vX.Y.Z
+# Optional: SKIP_CHECKS=1 (skip build/test), ALLOW_DIRTY=1 (allow dirty tree)
+release:
+	@if [ -z "$(TAG)" ]; then \
+		echo "Usage: make release TAG=vX.Y.Z (semver, e.g. v0.1.0)" >&2; exit 1; \
+	fi
+	@case "$(TAG)" in \
+		v[0-9]*.[0-9]*.[0-9]*) ;; \
+		*) echo "TAG must be vMAJOR.MINOR.PATCH (e.g. v0.1.0)" >&2; exit 1 ;; \
+	esac
+	@if [ -z "$(ALLOW_DIRTY)" ] && [ -n "$$(git status --porcelain)" ]; then \
+		echo "Working tree is dirty. Commit or stash first, or set ALLOW_DIRTY=1 to override." >&2; exit 1; \
+	fi
+	@if git rev-parse "$(TAG)" >/dev/null 2>&1; then \
+		echo "Tag $(TAG) already exists." >&2; exit 1; \
+	fi
+	@if [ -z "$(SKIP_CHECKS)" ]; then \
+		$(MAKE) build test; \
+	fi
+	@GPG_TTY=$$(tty) git tag -a "$(TAG)" -m "Release $(TAG)"
+	@echo
+	@echo "Tagged $(TAG) locally. To publish:"
+	@echo "    git push origin $(TAG)"
+
 clean:
 	rm -rf bin/
+
+docker-build:
+	docker build --build-arg VERSION=$(VERSION) -t $(IMAGE) .
+
+docker-build-legacy:
+	docker build --provenance=false --sbom=false --build-arg VERSION=$(VERSION) -t $(IMAGE) .
+
+docker-push: docker-build
+	docker push $(IMAGE)
+
+docker-push-legacy: docker-build-legacy
+	docker push $(IMAGE)
