@@ -4,7 +4,7 @@ REGISTRY ?= ghcr.io/$(if $(GITHUB_OWNER),$(GITHUB_OWNER),your-github-org)
 # k8s.io/dns (node-local-dns) release version — kept in sync with the pinned dependency tag.
 # Bump via `make update-k8sdns` (auto-detects latest) or `make update-k8sdns K8SDNS_TAG=x.y.z`.
 # See: https://github.com/kubernetes/dns/tags
-VERSION     ?= $(shell cat go-node-cache-version 2>/dev/null || echo UNKNOWN)
+VERSION     ?= $(shell cat go-node-cache-version 2>/dev/null || echo unknown)
 IMAGE    := $(REGISTRY)/k8s-dns-node-redis-cache:$(VERSION)
 
 VERSION_PKG := k8s.io/dns/pkg/version
