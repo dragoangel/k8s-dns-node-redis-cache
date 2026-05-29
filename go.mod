@@ -26,7 +26,7 @@ require (
 	github.com/DataDog/datadog-agent/pkg/util/scrubber v0.78.3 // indirect
 	github.com/DataDog/datadog-agent/pkg/version v0.78.3 // indirect
 	github.com/DataDog/datadog-go/v5 v5.8.3 // indirect
-	github.com/DataDog/dd-trace-go/v2 v2.8.1 // indirect
+	github.com/DataDog/dd-trace-go/v2 v2.8.2 // indirect
 	github.com/DataDog/go-libddwaf/v4 v4.9.0 // indirect
 	github.com/DataDog/go-runtime-metrics-internal v0.0.4-0.20260217080614-b0f4edc38a6d // indirect
 	github.com/DataDog/go-sqllexer v0.2.2 // indirect
@@ -64,18 +64,17 @@ require (
 	github.com/go-openapi/swag/typeutils v0.26.0 // indirect
 	github.com/go-openapi/swag/yamlutils v0.26.0 // indirect
 	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
-	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/gnostic-models v0.7.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645 // indirect
 	github.com/hashicorp/go-version v1.9.0 // indirect
+	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.6 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/linkdata/deadlock v0.5.5 // indirect
 	github.com/lufia/plan9stats v0.0.0-20260330125221-c963978e514e // indirect
-	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/mdlayher/socket v0.6.0 // indirect
 	github.com/mdlayher/vsock v1.2.1 // indirect
 	github.com/miekg/dns v1.1.72 // indirect
@@ -103,7 +102,7 @@ require (
 	github.com/prometheus/procfs v0.20.1 // indirect
 	github.com/puzpuzpuz/xsync/v3 v3.5.1 // indirect
 	github.com/quic-go/qpack v0.6.0 // indirect
-	github.com/quic-go/quic-go v0.59.0 // indirect
+	github.com/quic-go/quic-go v0.59.1 // indirect
 	github.com/redis/go-redis/v9 v9.19.0 // indirect
 	github.com/secure-systems-lab/go-securesystemslib v0.11.0 // indirect
 	github.com/shirou/gopsutil/v4 v4.26.4 // indirect
@@ -142,8 +141,8 @@ require (
 	golang.org/x/time v0.15.0 // indirect
 	golang.org/x/tools v0.45.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260504160031-60b97b32f348 // indirect
-	google.golang.org/grpc v1.81.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260511170946-3700d4141b60 // indirect
+	google.golang.org/grpc v1.81.1 // indirect
 	google.golang.org/protobuf v1.36.12-0.20260120151049-f2248ac996af // indirect
 	gopkg.in/evanphx/json-patch.v4 v4.13.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
@@ -160,5 +159,5 @@ require (
 	sigs.k8s.io/yaml v1.6.0 // indirect
 )
 
-// TODO: Remove this replace once https://github.com/coredns/coredns/pull/7923 is merged by upstream.
-replace github.com/coredns/coredns => github.com/dragoangel/coredns v0.0.0-20260313173505-1aa8adf3043b
+// TODO: Remove this replace once https://github.com/coredns/coredns/pull/8132 is merged by upstream.
+replace github.com/coredns/coredns => github.com/dragoangel/coredns v0.0.0-20260529090051-f0cc57f327bb
