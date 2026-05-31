@@ -160,4 +160,4 @@ require (
 )
 
 // TODO: Remove this replace once https://github.com/coredns/coredns/pull/8132 is merged by upstream.
-replace github.com/coredns/coredns => github.com/dragoangel/coredns v0.0.0-20260529090051-f0cc57f327bb
+replace github.com/coredns/coredns => github.com/dragoangel/coredns v0.0.0-20260531030932-cb2a265276d0
