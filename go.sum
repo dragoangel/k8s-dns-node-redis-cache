@@ -43,8 +43,8 @@ github.com/DataDog/sketches-go v1.4.8/go.mod h1:a/wjRUqzqtGS8qRHRPDCs4EAQfmvPDZG
 github.com/Microsoft/go-winio v0.5.0/go.mod h1:JPGBdM1cNvN/6ISo+n8V5iA4v8pBzdOpzfwIujj1a84=
 github.com/Microsoft/go-winio v0.6.2 h1:F2VQgta7ecxGYO8k3ZZz3RS8fVIXVxONVUPlNERoyfY=
 github.com/Microsoft/go-winio v0.6.2/go.mod h1:yd8OoFMLzJbo9gZq8j5qaps8bJ9aShtEA8Ipt1oGCvU=
-github.com/alicebob/miniredis/v2 v2.37.0 h1:RheObYW32G1aiJIj81XVt78ZHJpHonHLHW7OLIshq68=
-github.com/alicebob/miniredis/v2 v2.37.0/go.mod h1:TcL7YfarKPGDAthEtl5NBeHZfeUQj6OXMm/+iu5cLMM=
+github.com/alicebob/miniredis/v2 v2.38.0 h1:nZAzCR+Lj+Vxk4ZXzm2NuKq2O33RXj1XxJ2e2uP9jiw=
+github.com/alicebob/miniredis/v2 v2.38.0/go.mod h1:TcL7YfarKPGDAthEtl5NBeHZfeUQj6OXMm/+iu5cLMM=
 github.com/apparentlymart/go-cidr v1.1.1 h1:oEEk8CE0HP0YpHxsegk/TaOtR2FLHdWv4p3eM4ceUwg=
 github.com/apparentlymart/go-cidr v1.1.1/go.mod h1:EBcsNrHc3zQeuaeCeCtQruQm+n9/YjEn/vI25Lg7Gwc=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
@@ -75,8 +75,8 @@ github.com/dnstap/golang-dnstap v0.4.0 h1:KRHBoURygdGtBjDI2w4HifJfMAhhOqDuktAoka
 github.com/dnstap/golang-dnstap v0.4.0/go.mod h1:FqsSdH58NAmkAvKcpyxht7i4FoBjKu8E4JUPt8ipSUs=
 github.com/dragoangel/coredns v0.0.0-20260531030932-cb2a265276d0 h1:5A5Aq6Wp8OYWrVfEJyt+hPKSlwCdUhrPE+o5Bsz3apk=
 github.com/dragoangel/coredns v0.0.0-20260531030932-cb2a265276d0/go.mod h1:KdpYWHncZjWWJY6opsWArnCA8u0/QpM3K4cJSLHwE4g=
-github.com/dragoangel/coredns-redis-cache-plugin v1.1.0 h1:2/IYULpesZg1ZR+OWRGrrhSMZD+PUvFKiXBFbdSOpgo=
-github.com/dragoangel/coredns-redis-cache-plugin v1.1.0/go.mod h1:8DlL8Re32Mz4FVvDLeceq1o2MPThTL1nFjejw9pKMBY=
+github.com/dragoangel/coredns-redis-cache-plugin v1.1.1 h1:ckdceA21U5ijjN+UCk3XDmB2Oji2GJva06bmbKuoh8w=
+github.com/dragoangel/coredns-redis-cache-plugin v1.1.1/go.mod h1:kl6Q3nukZpGXK3bqAC54wxNwWENHAtg7X8cBuUwSR+U=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
 github.com/dustin/go-humanize v1.0.1/go.mod h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto=
