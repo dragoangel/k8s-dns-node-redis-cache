@@ -1,11 +1,15 @@
 module github.com/dragoangel/k8s-dns-node-redis-cache
 
-go 1.26.3
+// Note this minimum version requirement.
+go 1.26.0
+
+// What version we build with. This is the latest Go version at the time of writing.
+toolchain go1.26.4
 
 require (
 	github.com/coredns/caddy v1.1.4
 	github.com/coredns/coredns v1.14.3
-	github.com/dragoangel/coredns-redis-cache-plugin v1.1.1
+	github.com/dragoangel/coredns-redis-cache-plugin v1.1.3
 	k8s.io/dns v0.0.0-20260107162341-9aa70b8f97dc
 	k8s.io/utils v0.0.0-20260507154919-ff6756f316d2
 )
@@ -103,7 +107,7 @@ require (
 	github.com/puzpuzpuz/xsync/v3 v3.5.1 // indirect
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/quic-go/quic-go v0.59.1 // indirect
-	github.com/redis/go-redis/v9 v9.19.0 // indirect
+	github.com/redis/go-redis/v9 v9.20.0 // indirect
 	github.com/secure-systems-lab/go-securesystemslib v0.11.0 // indirect
 	github.com/shirou/gopsutil/v4 v4.26.4 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
