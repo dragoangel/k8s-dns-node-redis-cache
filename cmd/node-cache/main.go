@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 // This is a fork of k8s.io/dns/cmd/node-cache/main.go maintained by dragoangel
-// for personal use and available at github.com/dragoangel/k8s-dns-node-redis-cache
+// and available at github.com/dragoangel/k8s-dns-node-redis-cache
 // Please check README.md for details about the fork and how it differs from the original
 
 package main
