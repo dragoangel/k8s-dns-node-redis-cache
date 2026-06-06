@@ -1,23 +1,51 @@
 
 configs:
-  node-cache-corefile:
+  kube-dns-upstream-corefile:
     content: |
       .:53 {
-          errors
-          log
-          health :8080
           prometheus :9253
           cache {
-              success 60 10
-              denial 30 5
+              success 5 2
+              denial 3 1
           }
           redis_cache {
-              success ${REDIS_CACHE_SUCCESS_MAX:-1h} ${REDIS_CACHE_SUCCESS_MIN:-30s}
+              success ${REDIS_CACHE_SUCCESS_MAX:-1h} ${REDIS_CACHE_SUCCESS_MIN:-1m}
               denial ${REDIS_CACHE_DENIAL_MAX:-30m} ${REDIS_CACHE_DENIAL_MIN:-15s}
               endpoint valkey-master:6379
               read_endpoint valkey-replica:6379
-              key_prefix "" # no prefix to keep keys clean - dedicated instance
-                password ${VALKEY_PASSWORD:-changeMeViaEnvFile}
+              key_prefix "" # no prefix to keep keys shorter - dedicated instance
+              password ${VALKEY_PASSWORD:-changeMeViaEnvFile}
+              timeout {
+                  connect ${REDIS_CACHE_TIMEOUT_CONNECT:-1s}
+                  read ${REDIS_CACHE_TIMEOUT_READ:-1s}
+                  write ${REDIS_CACHE_TIMEOUT_WRITE:-2s}
+              }
+              resolver 127.0.0.11 # Docker DNS resolver
+          }
+          forward . tls://1.1.1.1 tls://1.0.0.1 {
+              tls_servername cloudflare-dns.com
+          }
+          loop
+          reload
+          log
+          errors
+      }
+
+  node-cache-corefile:
+    content: |
+      .:53 {
+          prometheus :9253
+          cache {
+              success 5 2
+              denial 3 1
+          }
+          redis_cache {
+              success ${REDIS_CACHE_SUCCESS_MAX:-1h} ${REDIS_CACHE_SUCCESS_MIN:-1m}
+              denial ${REDIS_CACHE_DENIAL_MAX:-30m} ${REDIS_CACHE_DENIAL_MIN:-15s}
+              endpoint valkey-master:6379
+              read_endpoint valkey-replica:6379
+              key_prefix "" # no prefix to keep keys shorter - dedicated instance
+              password ${VALKEY_PASSWORD:-changeMeViaEnvFile}
               timeout {
                   connect ${REDIS_CACHE_TIMEOUT_CONNECT:-1s}
                   read ${REDIS_CACHE_TIMEOUT_READ:-1s}
@@ -31,26 +59,37 @@ configs:
           }
           loop
           reload
-          loadbalance
-      }
-  kube-dns-upstream-corefile:
-    content: |
-      .:53 {
-          forward . 8.8.8.8:53 8.8.4.4:53
           log
           errors
       }
 
 services:
+  # Upstream DNS service — simulates a hostname-based upstream (e.g. ns-dns.ns-dns.cluster.local)
+  # The forward plugin resolves "kube-dns-upstream" via Docker DNS (127.0.0.11) to this container's IP
+  kube-dns-upstream:
+    image: ${COREDNS_IMAGE_REPO:-ghcr.io/dragoangel}/${COREDNS_IMAGE_NAME:-coredns-redis-cache}:${COREDNS_IMAGE_TAG:-latest}
+    ports:
+      - "${COREDNS_BIND_IP:-127.0.0.2}:${COREDNS_BIND_PORT:-5353}:53/udp"
+      - "${COREDNS_BIND_IP:-127.0.0.2}:${COREDNS_BIND_PORT:-5353}:53/tcp"
+      - "${COREDNS_METRICS_PORT:-9253}:9253"
+    command:
+      - -conf
+      - /etc/coredns/Corefile
+    configs:
+      - source: kube-dns-upstream-corefile
+        target: /etc/coredns/Corefile
+
   node-cache:
     image: ${NODE_CACHE_IMAGE_REPO:-ghcr.io/dragoangel}/${NODE_CACHE_IMAGE_NAME:-k8s-dns-node-redis-cache}:${NODE_CACHE_IMAGE_TAG:-latest}
     environment:
       # Simulate Kubernetes service env var for __PILLAR__CLUSTER__DNS__ resolution.
       KUBE_DNS_UPSTREAM_SERVICE_HOST: "127.0.0.11"
+    deploy:
+      replicas: ${NODE_CACHE_REPLICAS:-2}
     ports:
-      - "${DNS_BIND_IP:-127.0.0.1}:${DNS_BIND_PORT:-5553}:53/udp"
-      - "${DNS_BIND_IP:-127.0.0.1}:${DNS_BIND_PORT:-5553}:53/tcp"
-      - "9253:9253"
+      - "${NODE_CACHE_BIND_IP:-127.0.0.2}:${NODE_CACHE_BIND_PORTS:-5354-5355}:53/udp"
+      - "${NODE_CACHE_BIND_IP:-127.0.0.2}:${NODE_CACHE_BIND_PORTS:-5354-5355}:53/tcp"
+      - "${NODE_CACHE_METRICS_PORTS:-9254-9255}:9253"
     depends_on:
       valkey-master:
         condition: service_healthy
@@ -71,8 +110,9 @@ services:
     configs:
       - source: node-cache-corefile
         target: /etc/coredns/Corefile.base
+
   valkey-master:
-    image: ${VALKEY_IMAGE_REPO:-valkey}/${VALKEY_IMAGE_NAME:-valkey}:${VALKEY_IMAGE_TAG:-9.0.4-alpine}
+    image: ${VALKEY_IMAGE_REPO:-valkey}/${VALKEY_IMAGE_NAME:-valkey}:${VALKEY_IMAGE_TAG:-9-alpine}
     command:
       - valkey-server
       - --requirepass
@@ -81,6 +121,14 @@ services:
       - ${VALKEY_MAXMEMORY:-64mb}
       - --maxmemory-policy
       - ${VALKEY_MAXMEMORY_POLICY:-allkeys-lru}
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --repl-diskless-sync
+      - "yes"
+      - --repl-diskless-load
+      - "on-empty-db"
     ports:
       - "${VALKEY_MASTER_BIND_IP:-127.0.0.1}:${VALKEY_MASTER_PORT:-6379}:6379"
     healthcheck:
@@ -90,7 +138,9 @@ services:
       retries: 5
 
   valkey-replica:
-    image: ${VALKEY_IMAGE_REPO:-valkey}/${VALKEY_IMAGE_NAME:-valkey}:${VALKEY_IMAGE_TAG:-9.0.4-alpine}
+    image: ${VALKEY_IMAGE_REPO:-valkey}/${VALKEY_IMAGE_NAME:-valkey}:${VALKEY_IMAGE_TAG:-9-alpine}
+    deploy:
+      replicas: ${VALKEY_REPLICAS:-2}
     command:
       - valkey-server
       - --requirepass
@@ -104,8 +154,16 @@ services:
       - ${VALKEY_MAXMEMORY:-64mb}
       - --maxmemory-policy
       - ${VALKEY_MAXMEMORY_POLICY:-allkeys-lru}
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --repl-diskless-sync
+      - "yes"
+      - --repl-diskless-load
+      - "on-empty-db"
     ports:
-      - "${VALKEY_REPLICA_BIND_IP:-127.0.0.1}:${VALKEY_REPLICA_PORT:-6380}:6379"
+      - "${VALKEY_REPLICA_BIND_IP:-127.0.0.1}:${VALKEY_REPLICA_PORTS:-6380-6381}:6379"
     depends_on:
       valkey-master:
         condition: service_healthy
@@ -114,14 +172,3 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-
-  # Upstream DNS service — simulates a hostname-based upstream (e.g. ns-dns.ns-dns.cluster.local)
-  # The forward plugin resolves "kube-dns-upstream" via Docker DNS (127.0.0.11) to this container's IP
-  kube-dns-upstream:
-    image: ${COREDNS_IMAGE_REPO:-coredns}/${COREDNS_IMAGE_NAME:-coredns}:${COREDNS_IMAGE_TAG:-1.14.3}
-    command:
-      - -conf
-      - /etc/coredns/Corefile
-    configs:
-      - source: kube-dns-upstream-corefile
-        target: /etc/coredns/Corefile

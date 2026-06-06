@@ -30,7 +30,7 @@ This project eliminates the gap of small, per-node-limited DNS caches by introdu
 
 ### Prerequisites
 
-Golang or Docker with compose
+Golang or Docker and optionally Compose
 
 ### Build and test
 
@@ -40,6 +40,8 @@ make test
 ```
 
 ### Run local stack
+
+> **Note:** The `compose.yaml` stack in this repo is an example test stand for exercising and validating the caching logic locally (node-cache → shared Valkey L2 → upstream CoreDNS). It is **not** a production deployment topology — in production these components run as Kubernetes workloads (node-cache as a `DaemonSet`, Valkey as its own managed instance). Use it to develop, debug, and verify behavior, not as a reference for how to deploy.
 
 Step 1: create your local `.env` file with a random Valkey password.
 
@@ -81,7 +83,8 @@ PY
 fi
 ```
 
-DNS is exposed by default on `127.0.0.1:5553` (TCP/UDP). You can adjust `DNS_BIND_PORT` and `DNS_BIND_IP` in `.env`.
+DNS is exposed by default on `127.0.0.2:5353` (TCP/UDP) for the upstream CoreDNS and `127.0.0.2:5354-5355` for the NodeLocal DNSCache replicas (one host port per replica). You can adjust `COREDNS_BIND_IP`/`COREDNS_BIND_PORT` and `NODE_CACHE_BIND_IP`/`NODE_CACHE_BIND_PORTS` in `.env`.
+The number of replicas is controlled by `NODE_CACHE_REPLICAS` and `VALKEY_REPLICAS`; metrics are published on `COREDNS_METRICS_PORT` and the `NODE_CACHE_METRICS_PORTS` range. Each `*_PORTS` range must be at least as wide as the matching replica count, and the ranges must not overlap any other published host port.
 You can also adjust other settings in `.env`, like `VALKEY_MAXMEMORY`, `VALKEY_MAXMEMORY_POLICY`, and image versions (tags), etc.
 
 Step 2, option A: run against the published image from GitHub.
@@ -116,6 +119,9 @@ set -a; source "$ENV_FILE"; set +a
 QNAME="example.com"
 PREFIX=""   # matches key_prefix "" in compose Corefile
 
+# node-cache listens on a port range (one per replica); query the first one
+NODE_CACHE_PORT="${NODE_CACHE_BIND_PORTS%%-*}"
+
 # same name, different record types
 KEY_A="$(python3 utils/cache_key.py --prefix "$PREFIX" "$QNAME" A)"
 KEY_TXT="$(python3 utils/cache_key.py --prefix "$PREFIX" "$QNAME" TXT)"
@@ -129,10 +135,10 @@ KEY_A_DO_CD="$(python3 utils/cache_key.py --prefix "$PREFIX" --do --cd "$QNAME" 
 echo "$KEY_A $KEY_TXT $KEY_A_DEFAULT $KEY_A_DO $KEY_A_CD $KEY_A_DO_CD"
 
 # generate matching cache entries
-dig A "$QNAME" @"${DNS_BIND_IP}" -p "${DNS_BIND_PORT}"
-dig TXT "$QNAME" @"${DNS_BIND_IP}" -p "${DNS_BIND_PORT}"
-dig +dnssec A "$QNAME" @"${DNS_BIND_IP}" -p "${DNS_BIND_PORT}"
-dig +dnssec +cdflag A "$QNAME" @"${DNS_BIND_IP}" -p "${DNS_BIND_PORT}"
+dig A "$QNAME" @"${NODE_CACHE_BIND_IP}" -p "${NODE_CACHE_PORT}"
+dig TXT "$QNAME" @"${NODE_CACHE_BIND_IP}" -p "${NODE_CACHE_PORT}"
+dig +dnssec A "$QNAME" @"${NODE_CACHE_BIND_IP}" -p "${NODE_CACHE_PORT}"
+dig +dnssec +cdflag A "$QNAME" @"${NODE_CACHE_BIND_IP}" -p "${NODE_CACHE_PORT}"
 
 # fetch and decode a cached value from read endpoint (replica)
 docker compose exec -T valkey-replica valkey-cli -a "$VALKEY_PASSWORD" \
