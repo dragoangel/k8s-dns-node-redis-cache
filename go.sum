@@ -75,8 +75,8 @@ github.com/dnstap/golang-dnstap v0.4.0 h1:KRHBoURygdGtBjDI2w4HifJfMAhhOqDuktAoka
 github.com/dnstap/golang-dnstap v0.4.0/go.mod h1:FqsSdH58NAmkAvKcpyxht7i4FoBjKu8E4JUPt8ipSUs=
 github.com/dragoangel/coredns v0.0.0-20260607000434-721c99b7a5cf h1:vfszhJ46pORrgPCyObsI5WfOPX2zemg1331sMlViN8Y=
 github.com/dragoangel/coredns v0.0.0-20260607000434-721c99b7a5cf/go.mod h1:Fe7tedpcjk+FEmY7WmrN14UJ62oXI5DESlpcYKpAmpk=
-github.com/dragoangel/coredns-redis-cache-plugin v1.2.1 h1:vbKST5CYHoHXWeslowXdwfm9C0f0RuLiT3WImHVbBsk=
-github.com/dragoangel/coredns-redis-cache-plugin v1.2.1/go.mod h1:aj2FIUa9hd7cVKtWoPGAycdD18FX0JccEGbt8AzENHk=
+github.com/dragoangel/coredns-redis-cache-plugin v1.2.2 h1:gMGjD7/ZB/Jpw6/ueVPdlwO2wEnxAWtDptF8ae8Xhis=
+github.com/dragoangel/coredns-redis-cache-plugin v1.2.2/go.mod h1:aj2FIUa9hd7cVKtWoPGAycdD18FX0JccEGbt8AzENHk=
 github.com/dustin/go-humanize v1.0.0/go.mod h1:HtrtbFcZ19U5GC7JDqmcUSB87Iq5E25KnS6fMYU6eOk=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
 github.com/dustin/go-humanize v1.0.1/go.mod h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto=

@@ -9,7 +9,7 @@ toolchain go1.26.4
 require (
 	github.com/coredns/caddy v1.1.4
 	github.com/coredns/coredns v1.14.3
-	github.com/dragoangel/coredns-redis-cache-plugin v1.2.1
+	github.com/dragoangel/coredns-redis-cache-plugin v1.2.2
 	k8s.io/dns v0.0.0-20260107162341-9aa70b8f97dc
 	k8s.io/utils v0.0.0-20260507154919-ff6756f316d2
 )
