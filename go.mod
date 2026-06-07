@@ -9,7 +9,7 @@ toolchain go1.26.4
 require (
 	github.com/coredns/caddy v1.1.4
 	github.com/coredns/coredns v1.14.3
-	github.com/dragoangel/coredns-redis-cache-plugin v1.1.3
+	github.com/dragoangel/coredns-redis-cache-plugin v1.2.1
 	k8s.io/dns v0.0.0-20260107162341-9aa70b8f97dc
 	k8s.io/utils v0.0.0-20260507154919-ff6756f316d2
 )
@@ -133,13 +133,13 @@ require (
 	go.uber.org/zap v1.28.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.4 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/crypto v0.51.0 // indirect
+	golang.org/x/crypto v0.52.0 // indirect
 	golang.org/x/exp v0.0.0-20260508232706-74f9aab9d74a // indirect
 	golang.org/x/mod v0.36.0 // indirect
-	golang.org/x/net v0.54.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
-	golang.org/x/sys v0.44.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/term v0.43.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
@@ -164,4 +164,4 @@ require (
 )
 
 // TODO: Remove this replace once https://github.com/coredns/coredns/pull/8132 is merged by upstream.
-replace github.com/coredns/coredns => github.com/dragoangel/coredns v0.0.0-20260531030932-cb2a265276d0
+replace github.com/coredns/coredns => github.com/dragoangel/coredns v0.0.0-20260607000434-721c99b7a5cf
