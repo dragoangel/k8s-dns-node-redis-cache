@@ -55,7 +55,6 @@ configs:
           }
           forward . kube-dns-upstream {
               resolver __PILLAR__CLUSTER__DNS__
-              resolve_interval 30s
           }
           loop
           reload
