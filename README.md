@@ -5,7 +5,6 @@ Node-local DNS cache with a shared Redis/Valkey-backed L2 cache.
 This project is a fork/adaptation of Kubernetes `node-local-dns` with:
 
 - Redis-backed shared cache plugin (`github.com/dragoangel/coredns-redis-cache-plugin` - included in `main.go`)
-- Hostname resolution support for `forward` upstream targets (via patched CoreDNS - replaced in `go.mod`)
 - Containerized workflow for local development and production image publishing
 
 ## Why this exists
@@ -164,11 +163,6 @@ Published image name:
 2. Commit changes.
 3. Create and push a tag like `v1.0.0`.
 4. GitHub Actions publishes the tagged image to GHCR.
-
-## Notes
-
-- `go.mod` currently uses a temporary CoreDNS fork via `replace` until upstream changes are merged.
-- Default compose password values are for local testing only. Use strong secrets in real deployments.
 
 ## License
 

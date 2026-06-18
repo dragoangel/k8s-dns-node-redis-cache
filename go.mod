@@ -8,8 +8,8 @@ toolchain go1.26.4
 
 require (
 	github.com/coredns/caddy v1.1.4
-	github.com/coredns/coredns v1.14.3
-	github.com/dragoangel/coredns-redis-cache-plugin v1.2.2
+	github.com/coredns/coredns v1.14.4
+	github.com/dragoangel/coredns-redis-cache-plugin v1.2.3
 	k8s.io/dns v0.0.0-20260107162341-9aa70b8f97dc
 	k8s.io/utils v0.0.0-20260507154919-ff6756f316d2
 )
@@ -107,7 +107,7 @@ require (
 	github.com/puzpuzpuz/xsync/v3 v3.5.1 // indirect
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/quic-go/quic-go v0.59.1 // indirect
-	github.com/redis/go-redis/v9 v9.20.0 // indirect
+	github.com/redis/go-redis/v9 v9.20.1 // indirect
 	github.com/secure-systems-lab/go-securesystemslib v0.11.0 // indirect
 	github.com/shirou/gopsutil/v4 v4.26.4 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
@@ -138,7 +138,7 @@ require (
 	golang.org/x/mod v0.36.0 // indirect
 	golang.org/x/net v0.55.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
-	golang.org/x/sync v0.20.0 // indirect
+	golang.org/x/sync v0.21.0 // indirect
 	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/term v0.43.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
@@ -162,6 +162,3 @@ require (
 	sigs.k8s.io/structured-merge-diff/v6 v6.4.0 // indirect
 	sigs.k8s.io/yaml v1.6.0 // indirect
 )
-
-// TODO: Remove this replace once https://github.com/coredns/coredns/pull/8132 is merged by upstream.
-replace github.com/coredns/coredns => github.com/dragoangel/coredns v0.0.0-20260607000434-721c99b7a5cf
