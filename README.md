@@ -1,4 +1,11 @@
+<img src="resources/logo.svg" alt="CoreDNS" width="96" align="right">
+
 # k8s-dns-node-redis-cache
+
+[![CI](https://github.com/dragoangel/k8s-dns-node-redis-cache/actions/workflows/ci.yml/badge.svg)](https://github.com/dragoangel/k8s-dns-node-redis-cache/actions/workflows/ci.yml)
+[![Publish Image](https://github.com/dragoangel/k8s-dns-node-redis-cache/actions/workflows/publish-image.yml/badge.svg)](https://github.com/dragoangel/k8s-dns-node-redis-cache/actions/workflows/publish-image.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/dragoangel/k8s-dns-node-redis-cache.svg)](https://pkg.go.dev/github.com/dragoangel/k8s-dns-node-redis-cache)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
 Node-local DNS cache with a shared Redis/Valkey-backed L2 cache.
 
@@ -164,6 +171,7 @@ Published image name:
 3. Create and push a tag like `v1.0.0`.
 4. GitHub Actions publishes the tagged image to GHCR.
 
-## License
+## Attribution
 
-Apache-2.0. See `LICENSE`.
+The logo is the CoreDNS icon, © the CoreDNS Authors, from
+[coredns/logo](https://github.com/coredns/logo).
