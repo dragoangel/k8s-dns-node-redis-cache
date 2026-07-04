@@ -4,7 +4,6 @@
 
 [![CI](https://github.com/dragoangel/k8s-dns-node-redis-cache/actions/workflows/ci.yml/badge.svg)](https://github.com/dragoangel/k8s-dns-node-redis-cache/actions/workflows/ci.yml)
 [![Publish Image](https://github.com/dragoangel/k8s-dns-node-redis-cache/actions/workflows/publish-image.yml/badge.svg)](https://github.com/dragoangel/k8s-dns-node-redis-cache/actions/workflows/publish-image.yml)
-[![Go Reference](https://pkg.go.dev/badge/github.com/dragoangel/k8s-dns-node-redis-cache.svg)](https://pkg.go.dev/github.com/dragoangel/k8s-dns-node-redis-cache)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
 Node-local DNS cache with a shared Redis/Valkey-backed L2 cache.
