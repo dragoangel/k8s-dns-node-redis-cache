@@ -15,6 +15,11 @@ RUN BUILD_VER="${VERSION:-$(cat go-node-cache-version 2>/dev/null || echo -n unk
 FROM gcr.io/distroless/static-debian12
 
 COPY --from=builder /node-cache /node-cache
+LABEL org.opencontainers.image.title="k8s-dns-node-redis-cache" \
+      org.opencontainers.image.description="Node-local DNS cache with a shared Redis/Valkey-backed L2 cache" \
+      org.opencontainers.image.authors="Dmytro Alieksieiev (dragoangel)" \
+      org.opencontainers.image.source="https://github.com/dragoangel/k8s-dns-node-redis-cache" \
+      org.opencontainers.image.licenses="Apache-2.0"
 
 EXPOSE 53/udp 53/tcp
 
