@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Decode a DNS wire-format record from redis_cache.
+"""Decode a DNS cache record from redis_cache.
 
-Cached values are raw DNS wire format. Typical workflow:
+Cached values are either legacy raw DNS wire format or the versioned
+RCD payload used by redis_cache. Typical workflow:
 
     # read from piped stdin
     redis-cli GET <key> | decode_cache_record.py
@@ -14,6 +15,10 @@ Cached values are raw DNS wire format. Typical workflow:
 import argparse
 import struct
 import sys
+
+PAYLOAD_PREFIX = b"RCD"
+SUPPORTED_RCD_VERSIONS = {2}
+PAYLOAD_FLAG_DO = 1 << 0
 
 QTYPES = {
     1: "A", 2: "NS", 5: "CNAME", 6: "SOA", 12: "PTR", 13: "HINFO",
@@ -151,9 +156,37 @@ def load_data(args):
         return fh.read()
 
 
+def decode_payload(data):
+    """Return (wire_bytes, do_flag, format_label)."""
+    if not data.startswith(PAYLOAD_PREFIX):
+        return data, None, "raw"
+
+    if len(data) < len(PAYLOAD_PREFIX) + 2:
+        raise ValueError("data too short for versioned RCD payload")
+
+    version_byte = data[len(PAYLOAD_PREFIX)]
+    if version_byte < ord("0") or version_byte > ord("9"):
+        raise ValueError(f"invalid RCD payload version byte {version_byte:#x}")
+
+    version = version_byte - ord("0")
+    if version < min(SUPPORTED_RCD_VERSIONS):
+        raise ValueError(f"unsupported RCD payload version {version} (invalid data)")
+    if version not in SUPPORTED_RCD_VERSIONS:
+        raise ValueError(f"unknown RCD payload version {version} (unsupported format)")
+
+    flags = data[len(PAYLOAD_PREFIX) + 1]
+    return data[len(PAYLOAD_PREFIX) + 2:], bool(flags & PAYLOAD_FLAG_DO), f"RCD v{version}"
+
+
 def main():
     args = parse_args()
     data = load_data(args)
+
+    try:
+        data, payload_do, payload_format = decode_payload(data)
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
 
     if len(data) < 12:
         print("Error: data too short for DNS header", file=sys.stderr)
@@ -172,11 +205,12 @@ def main():
 
     # DO lives in the EDNS OPT pseudo-RR (additional section), not the header.
     # Scan for it so the cache-key-relevant bits (DO + CD) are both visible.
-    do = find_edns_do(data, arcount)
+    do = payload_do if payload_do is not None else find_edns_do(data, arcount)
 
     print(f"ID:     {msg_id}")
     print(f"Flags:  QR={qr} Opcode={opcode} AA={aa} TC={tc} RD={rd} RA={ra} AD={ad} CD={cd} Rcode={RCODES.get(rcode, rcode)}")
     print(f"EDNS:   DO={do if do is not None else '-'}")
+    print(f"Format:  {payload_format}")
     print(f"Counts: QUERY={qdcount} ANSWER={ancount} AUTHORITY={nscount} ADDITIONAL={arcount}")
 
     offset = 12
